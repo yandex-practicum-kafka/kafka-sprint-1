@@ -1,0 +1,9 @@
+Создайте файл topic.txt в корне проекта и сохраните в нем:
+
+•   Команду для создания topic:
+
+    kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 2 --partitions 3 --topic my-topic
+
+*  Вывод команды describe:
+
+    kafka-topics --describe --topic my-topic --bootstrap-server localhost:9092

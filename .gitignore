@@ -1,76 +1,38 @@
-# Java class files
-*.class
-
-# Maven files
-target/
-!.mvn/
-!.mvn/wrapper/maven-wrapper.jar
-!.mvn/wrapper/maven-wrapper.properties
-
-# Gradle files (если используете Gradle)
-.gradle/
+HELP.md
+.gradle
 build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# VSCode specific files
-.vscode/
-.history/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
-# IntelliJ IDEA specific files
-.idea/
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
 *.ipr
-*.iws
 out/
-*.class
-*.log
-*.project
-*.pydevproject
-*.settings/
-*.swp
-.DS_Store
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# Docker files
-*.log
-docker-compose.override.yml
-docker-compose.yml
-*.env
-*.sql
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 
-# Operating system specific files
-Thumbs.db
-.DS_Store
-desktop.ini
-*.bak
-*.swp
-*~
-
-# IDE-specific
-*.orig
-*.sublime-workspace
-*.sublime-project
-.idea/
-
-# Logs
-logs/*
-*.log
-
-# Temp files
-tmp/
-temp/
-*.tmp
-
-# Other
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.tar.bz2
-
-# Exclude application.properties if it's sensitive (e.g. contains credentials)
-# src/main/resources/application.properties
-
-# Exclude test reports
-**/surefire-reports/
-**/failsafe-reports/
-
+### VS Code ###
+.vscode/
+.qodo
