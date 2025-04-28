@@ -1,0 +1,76 @@
+# Java class files
+*.class
+
+# Maven files
+target/
+!.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# Gradle files (если используете Gradle)
+.gradle/
+build/
+
+# VSCode specific files
+.vscode/
+.history/
+
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+*.class
+*.log
+*.project
+*.pydevproject
+*.settings/
+*.swp
+.DS_Store
+
+# Docker files
+*.log
+docker-compose.override.yml
+docker-compose.yml
+*.env
+*.sql
+
+# Operating system specific files
+Thumbs.db
+.DS_Store
+desktop.ini
+*.bak
+*.swp
+*~
+
+# IDE-specific
+*.orig
+*.sublime-workspace
+*.sublime-project
+.idea/
+
+# Logs
+logs/*
+*.log
+
+# Temp files
+tmp/
+temp/
+*.tmp
+
+# Other
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.tar.bz2
+
+# Exclude application.properties if it's sensitive (e.g. contains credentials)
+# src/main/resources/application.properties
+
+# Exclude test reports
+**/surefire-reports/
+**/failsafe-reports/
+
