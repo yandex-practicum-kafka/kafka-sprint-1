@@ -1,8 +1,11 @@
 ### Описание решения задания
 
-Приложение Kafka на языке Java с использованием Spring Boot, включающее в себя продюсера 
-и двух типов консьюмеров: одиночного и пакетного. Каждый консьюмер запущен в двух экземплярах.
-Также реализованы сериализация/десериализация и обеспечены гарантии доставки сообщений.
+Приложение Kafka на языке Java с использованием Spring Boot,  
+
+включающее в себя продюсера и двух типов консьюмеров:  
+одиночного и пакетного. Каждый консьюмер запущен в двух экземплярах.  
+
+Также реализованы сериализация/десериализация и обеспечены гарантии доставки сообщений.  
 
 Необходимые инструменты и ПО:
 
@@ -39,12 +42,12 @@ Ethernet adapter Ethernet:
 Аналогично в Linux:
 ```ip addr show```
 
-После внесение корректировок в docker-compose.yml, соберите и запустите 
+После внесение корректировок в [docker-compose.yml](docker-compose.yml), соберите и запустите 
 контейнеры с помощью Docker Compose из корневого каталога проекта:
 
 ```docker-compose up --build```
 
-Проект будет собран автоматически, исходя из Dockerfile в корневом каталоге и docker-compose.yml.
+Проект будет собран автоматически, исходя из Dockerfile в корневом каталоге и [docker-compose.yml](docker-compose.yml).
 
 Для остановки и удаления контейнеров выполните:
 
@@ -138,7 +141,7 @@ volumes:
   kafka_2_data:
 ```
 
-Мы определили несколько сервисов Kafka в среде Docker с использованием образа bitnami/kafka:3.4.  
+Мы определили несколько сервисов Kafka в среде Docker с использованием образа ```bitnami/kafka:3.4```.  
 Настройки оптимизированы для работы в режиме KRaft (Kafka Raft), который не требует Zookeeper.  
 Конфигурация включает три брокера Kafka, которые работают вместе в кластере, а также дополнительный сервис для создания тем.  
 
@@ -174,7 +177,7 @@ volumes:
 
 Конфигурация создает кластер Kafka из трех брокеров с возможностью работы в режиме KRaft. Также предусмотрен сервис, который автоматически создает необходимые темы при старте кластера.  
 
-Автоматическое создание темы после старта сервисов Kafka:
+Автоматическое создание темы после старта сервисов Kafka (см. [./scripts/create-topic.sh](./scripts/create-topic.sh)):
 
 ```
 #!/bin/bash
@@ -306,9 +309,9 @@ fi
 ```
 
 Пояснения:
-  •  Параметр KAFKA_ADVERTISED_HOST_NAME (см. ранее) будет доступен для контейнеров producer и consumer.  
-  •  producer, single-consumer-1, single-consumer-2, batch-consumer-1, batch-consumer-2: Сервисы, запускающие Spring Boot приложение с разными профилями. depends_on гарантирует, что Kafka будет запущен перед запуском приложения.  
-  •  build: .: Указывает, что Dockerfile находится в текущей директории. см. Dockerfile для сборки и старта приложения в корне проекта.  
+  •  Параметр ```KAFKA_ADVERTISED_HOST_NAME``` (см. ранее) будет доступен для контейнеров producer и consumer.  
+  •  ```producer```, ```single-consumer-1```, ```single-consumer-2```, ```batch-consumer-1```, ```batch-consumer-2```: Сервисы, запускающие Spring Boot приложение с разными профилями. depends_on гарантирует, что Kafka будет запущен перед запуском приложения.  
+  •  ```build: .```: Указывает, что [Dockerfile](Dockerfile) находится в текущей директории. см. [Dockerfile](Dockerfile) для сборки и старта приложения в корне проекта.  
   
 ```
 FROM openjdk:21-jdk-slim AS builder
@@ -339,8 +342,9 @@ COPY --from=builder /app/build/libs/KafkaApp-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
 ```
 
-  •  ports: Пробрасывает порты из контейнера на хост-машину для доступа к сервисам.  
-  •  environment: Устанавливает переменные окружения для сервисов. SPRING_PROFILES_ACTIVE указывает, какой профиль Spring будет активирован. Например application-batch-consumer-2.yml:   
+  •  ```ports```: Пробрасывает порты из контейнера на хост-машину для доступа к сервисам.  
+
+  •  ```environment```: Устанавливает переменные окружения для сервисов. ```SPRING_PROFILES_ACTIVE``` указывает, какой профиль Spring будет активирован. Например [application-batch-consumer-2.yml](./src/main/resources/application-batch-consumer-2.yml):   
   
 ```
 spring:
@@ -416,9 +420,9 @@ spring:
   
 ```
 
-•  Создаём проект Spring Boot: Используем Spring Initializr (start.spring.io) или IDE для создания нового проекта Spring Boot.  
+•  Создаём проект Spring Boot: Используем [Spring Initializr](https://start.spring.io) или IDE для создания нового проекта Spring Boot.  
 
-•  Добавляем следующие зависимости в файл сборки build.gradle (Gradle):  
+•  Добавляем следующие зависимости в файл сборки ```build.gradle``` (Gradle):  
 
 ```    dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -429,7 +433,7 @@ spring:
     }
 ```
 
-•  Создаём файл настроек/конфигурации приложения application.yml (каталог [./src/main/resources](./src/main/resources)):  
+•  Создаём файл настроек/конфигурации приложения [application.yml](./src/main/resources/application.yml) (каталог [./src/main/resources](./src/main/resources)):  
 
 ```
 kafka:
@@ -445,7 +449,7 @@ kafka:
   •  kafka.group.single: Group ID для SingleMessageConsumer.  
   •  kafka.group.batch: Group ID для BatchMessageConsumer.  
 
-И соответствующие файлы для конфигураций приложения (application-batch-consumer-1.yml, application-batch-consumer-2.yml, application-single-consumer-1.yml, application-single-consumer-2.yml)  
+И соответствующие файлы для конфигураций приложения ([application-batch-consumer-1.yml](./src/main/resources/application-batch-consumer-1.yml), [application-batch-consumer-2.yml](./src/main/resources/application-batch-consumer-2.yml), [application-single-consumer-1.yml](./src/main/resources/application-single-consumer-1.yml), [application-single-consumer-2.yml](./src/main/resources/application-single-consumer-2.yml))  
 
 При успешной работе/настройке, старте приложения (всех сервисов) можем видеть (для Windows, Docker Compose):
 
