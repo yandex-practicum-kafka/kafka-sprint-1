@@ -226,11 +226,11 @@ fi
 
 ```docker exec -it <KAFKA_CONTAINER_NAME> bash -c "/opt/bitnami/kafka/bin/kafka-topics.sh --delete --topic my-topic --bootstrap-server localhost:9092"```
 
-  •  --create: Указывает на создание нового topic.  
-  •  --bootstrap-server localhost:9092: Адрес и порт Kafka Broker.  
-  •  --replication-factor 2: Каждое сообщение будет скопировано на 2 разных broker-а для отказоустойчивости.  
-  •  --partitions 3: topic будет разделен на 3 партиции для параллельной обработки.  
-  •  --topic my-topic: Имя topic.  
+  •  ```--create```: Указывает на создание нового topic.  
+  •  ```--bootstrap-server localhost:9092```: Адрес и порт Kafka Broker.  
+  •  ```--replication-factor 2``: Каждое сообщение будет скопировано на 2 разных broker-а для отказоустойчивости.  
+  •  ```--partitions 3```: topic будет разделен на 3 партиции для параллельной обработки.  
+  •  ```--topic my-topic```: Имя topic.  
 
 ## Описание сервисов приложения
 
@@ -314,7 +314,7 @@ fi
 
   •  ```producer```, ```single-consumer-1```, ```single-consumer-2```, ```batch-consumer-1```, ```batch-consumer-2```, cервисы, запускающие Spring Boot приложение с разными профилями.  
   
-  •  ```depends_on гарантирует, что Kafka будет запущен перед запуском приложения.  
+  •  ```depends_on``` гарантирует, что Kafka будет запущен перед запуском приложения.  
 
   •  ```build: .```: Указывает, что [Dockerfile](Dockerfile) находится в текущей директории. см. [Dockerfile](Dockerfile) для сборки и старта приложения в корне проекта.  
 
@@ -350,7 +350,10 @@ ENTRYPOINT ["java","-jar","app.jar"]
 
   •  ```ports```: Пробрасывает порты из контейнера на хост-машину для доступа к сервисам.  
 
-  •  ```environment```: Устанавливает переменные окружения для сервисов. ```SPRING_PROFILES_ACTIVE``` указывает, какой профиль Spring будет активирован.  
+  •  ```environment```: Устанавливает переменные окружения для сервисов.  
+  
+  •  ```SPRING_PROFILES_ACTIVE``` указывает, какой профиль Spring будет активирован.  
+  
   Например, [application-batch-consumer-2.yml](./src/main/resources/application-batch-consumer-2.yml):   
   
 ```
@@ -391,21 +394,21 @@ spring:
   ├── src/
   │  └── main/
   │    └── java/
-  │      └── com/
-  │        └── example/
-  │          ├── KafkaApp.java
-  │          ├── config/
-  │          │  └── KafkaConfig.java
-  │          ├── model/
-  │          │  └── MyMessage.java
-  │          ├── producer/
-  │          │  └── MyProducer.java
-  │          ├── consumer/
-  │          │  ├── SingleMessageConsumer.java
-  │          │  └── BatchMessageConsumer.java
-  │          └── serializers/
-  │            ├── MyMessageSerializer.java
-  │            └── MyMessageDeserializer.java
+  │    │  └── com/
+  │    │  └── example/
+  │    │     ├── KafkaApp.java
+  │    │     ├── config/
+  │    │     │  └── KafkaConfig.java
+  │    │     ├── model/
+  │    │     │  └── MyMessage.java
+  │    │     ├── producer/
+  │    │     │  └── MyProducer.java
+  │    │     ├── consumer/
+  │    │     │  ├── SingleMessageConsumer.java
+  │    │     │  └── BatchMessageConsumer.java
+  │    │     └── serializers/
+  │    │       ├── MyMessageSerializer.java
+  │    │       └── MyMessageDeserializer.java
   │    └── resources/
   │       ├── application.yml 
   │       ├── application-batch-consumer-1.yml 
