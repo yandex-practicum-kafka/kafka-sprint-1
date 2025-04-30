@@ -395,20 +395,20 @@ spring:
   │  └── main/
   │    └── java/
   │    │  └── com/
-  │    │  └── example/
-  │    │     ├── KafkaApp.java
-  │    │     ├── config/
-  │    │     │  └── KafkaConfig.java
-  │    │     ├── model/
-  │    │     │  └── MyMessage.java
-  │    │     ├── producer/
-  │    │     │  └── MyProducer.java
-  │    │     ├── consumer/
-  │    │     │  ├── SingleMessageConsumer.java
-  │    │     │  └── BatchMessageConsumer.java
-  │    │     └── serializers/
-  │    │       ├── MyMessageSerializer.java
-  │    │       └── MyMessageDeserializer.java
+  │    │     └── example/
+  │    │        ├── KafkaApp.java
+  │    │        ├── config/
+  │    │        │  └── KafkaConfig.java
+  │    │        ├── model/
+  │    │        │  └── MyMessage.java
+  │    │        ├── producer/
+  │    │        │  └── MyProducer.java
+  │    │        ├── consumer/
+  │    │        │  ├── SingleMessageConsumer.java
+  │    │        │  └── BatchMessageConsumer.java
+  │    │        └── serializers/
+  │    │           ├── MyMessageSerializer.java
+  │    │           └── MyMessageDeserializer.java
   │    └── resources/
   │       ├── application.yml 
   │       ├── application-batch-consumer-1.yml 
