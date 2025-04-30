@@ -53,7 +53,7 @@ Ethernet adapter Ethernet:
 
 ```docker-compose down```
 
-## Описание сервисов приложения
+## Описание сервисов приложения (Kafka)
 
 Настройка сервисов Kafka (см. [docker-compose.yml](docker-compose.yml)):
 
@@ -247,7 +247,7 @@ Topic: my-topic TopicId: g6IC-KW5QSqD6-Y2iUS4Qw PartitionCount: 3       Replicat
         Topic: my-topic Partition: 2    Leader: 2       Replicas: 1,2   Isr: 2,1
 ```
 
-## Описание сервисов приложения
+## Описание сервисов приложения (App)
 
 Описание сервисов приложения (в соответствии с фактором репликации 2 для потребителей) (см. [docker-compose.yml](docker-compose.yml)):
 
@@ -483,6 +483,8 @@ kafka.group.batch: Group ID для BatchMessageConsumer.
 ```  
 
 И соответствующие файлы для конфигураций приложения ([application-batch-consumer-1.yml](./src/main/resources/application-batch-consumer-1.yml), [application-batch-consumer-2.yml](./src/main/resources/application-batch-consumer-2.yml), [application-single-consumer-1.yml](./src/main/resources/application-single-consumer-1.yml), [application-single-consumer-2.yml](./src/main/resources/application-single-consumer-2.yml))  
+
+### Журналирование и мониторинг
 
 При успешной работе/настройке, старте приложения (всех сервисов) можем видеть (для Windows, Docker Compose):
 
