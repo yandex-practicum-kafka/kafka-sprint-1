@@ -11,7 +11,7 @@
 
 •  Java Development Kit (JDK) 21 или новее.  
 •  Gradle (для управления зависимостями и сборки проекта).  
-•  Spring Boot: Используем Spring Initializr (start.spring.io) для создания нового проекта приложения.  
+•  Spring Boot: Используем [Spring Initializr](https://start.spring.io) для создания нового проекта приложения.  
 •  Docker и Docker Compose (для запуска Kafka).  
 •  Kafka (брокер сообщений, Kraft-режим).  
 
