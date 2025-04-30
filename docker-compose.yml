@@ -1,4 +1,3 @@
-#version: "3.9"
 services:
   kafka-0:
     image: bitnami/kafka:3.4
@@ -60,12 +59,25 @@ services:
     networks:
       - kafka-net
    
-  producer:
-    build: .
+  topic-creator:
+    image: bitnami/kafka:3.4
     depends_on:
       - kafka-0
       - kafka-1
       - kafka-2
+    volumes:
+      - ./scripts/create-topic.sh:/create-topic.sh
+    entrypoint: /bin/bash /create-topic.sh
+    networks:
+      - kafka-net
+
+  producer:
+    build: .
+    depends_on:
+      - topic-creator
+#      - kafka-0
+#      - kafka-1
+#      - kafka-2
     ports:
       - "8081:8081"
     environment:
@@ -77,9 +89,10 @@ services:
   single-consumer-1:
     build: .
     depends_on:
-      - kafka-0
-      - kafka-1
-      - kafka-2
+      - topic-creator
+#      - kafka-0
+#      - kafka-1
+#      - kafka-2
     ports:
       - "8082:8082"
     environment:
@@ -91,9 +104,10 @@ services:
   single-consumer-2:
     build: .
     depends_on:
-      - kafka-0
-      - kafka-1
-      - kafka-2
+      - topic-creator
+#      - kafka-0
+#      - kafka-1
+#      - kafka-2
     ports:
       - "8083:8083"
     environment:
@@ -105,9 +119,10 @@ services:
   batch-consumer-1:
     build: .
     depends_on:
-      - kafka-0
-      - kafka-1
-      - kafka-2
+      - topic-creator
+#      - kafka-0
+#      - kafka-1
+#      - kafka-2
     ports:
       - "8084:8084"
     environment:
@@ -119,9 +134,10 @@ services:
   batch-consumer-2:
     build: .
     depends_on:
-      - kafka-0
-      - kafka-1
-      - kafka-2
+      - topic-creator
+#      - kafka-0
+#      - kafka-1
+#      - kafka-2
     ports:
       - "8085:8085"
     environment:
@@ -141,21 +157,6 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: kraft
       KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka-0:9092,kafka-1:9092,kafka-2:9092
-    networks:
-      - kafka-net
-
-  kafdrop:
-    image: obsidiandynamics/kafdrop:latest
-    depends_on:
-      - kafka-0
-      - kafka-1
-      - kafka-2
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: kafka-0:9092,kafka-1:9092,kafka-2:9092
-      JVM_OPTS: "-Xms32M -Xmx64M"
-#    restart: always
     networks:
       - kafka-net
 

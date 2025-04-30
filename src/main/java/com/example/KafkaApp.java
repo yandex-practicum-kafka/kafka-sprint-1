@@ -23,11 +23,18 @@ public class KafkaApp {
 		SpringApplication.run(KafkaApp.class, args);
 	}
 
-	@Scheduled(fixedRate = 1000) // Send message every 1 second
+	@Scheduled(fixedRate = 1000) // Аннотация, указывающая, что метод будет вызываться каждые 1000 миллисекунд (1 секунда)
 	public void produceMessage() {
+		// Генерируем случайный идентификатор в диапазоне от 0 до 99
 		int id = random.nextInt(100);
+		
+		// Формируем текст сообщения, включая сгенерированный идентификатор
 		String messageContent = "Message with id: " + id;
+		
+		// Создаем новый объект MyMessage, который содержит текст сообщения и идентификатор
 		MyMessage message = new MyMessage(messageContent, id);
+		
+		// Отправляем созданное сообщение с помощью метода sendMessage из продюсера
 		producer.sendMessage(message);
 	}
-}
+	}

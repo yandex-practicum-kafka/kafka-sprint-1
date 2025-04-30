@@ -1,5 +1,5 @@
 kafka:
-  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka-0:9092,kafka-1:9092,kafka-2:9092} # Provide a default value
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka-0:9092,kafka-1:9092,kafka-2:9092}
   topic: my-topic
   group:
     single: single-consumer-group

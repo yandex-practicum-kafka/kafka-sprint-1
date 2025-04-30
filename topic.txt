@@ -1,9 +1,75 @@
-Создайте файл topic.txt в корне проекта и сохраните в нем:
+Автоматическое создание темы после старта сервисов Kafka:
 
-•   Команду для создания topic:
+Сервис создания тем (topic-creator)
 
-    kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 2 --partitions 3 --topic my-topic
+- Использует тот же образ Kafka, что и брокеры.
+- Cервис зависит от всех брокеров Kafka. Это гарантирует, что все они будут запущены перед выполнением скрипта создания тем.
+- Скрипт create-topic.sh, который создает темы, монтируется как том, чтобы быть доступным внутри контейнера.
+- Entrypoint: При запуске контейнера выполняется скрипт /create-topic.sh, т.е. он будет создавать необходимые темы, при необходимости, в случае их отсутствия, сразу после инициирования.
 
-*  Вывод команды describe:
+```
+#!/bin/bash
 
-    kafka-topics --describe --topic my-topic --bootstrap-server localhost:9092
+# Определяем имя темы
+TOPIC_NAME="my-topic"
+
+# Проверка существования темы
+if /opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic "$TOPIC_NAME" --bootstrap-server kafka-0:9092; then
+    echo "Topic '$TOPIC_NAME' already exists."
+else
+    echo "Topic '$TOPIC_NAME' does not exist. Creating the topic..."
+    # Создаем новую тему, если она не существует
+    /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic "$TOPIC_NAME" --partitions 3 --replication-factor 2 --bootstrap-server kafka-0:9092
+    echo "Topic '$TOPIC_NAME' created successfully. Here is the topic description:"
+    # Выводим описание вновь созданной темы
+    /opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic "$TOPIC_NAME" --bootstrap-server kafka-0:9092
+fi
+```
+
+Успешный вывод при автоматическом создании темы см.:
+
+![kafka-sprint-1-create-my-topic.png](images/kafka-sprint-1-create-my-topic.png)
+
+Описание создаваемой темы: my-topic
+
+1. Имя темы: 
+   - my-topic — уникальное имя, под которым будет зарегистрирована и доступна тема в Kafka.
+
+При создании темы используются следующие параметры:
+
+- Параметр: --partitions 3
+	Тема будет разделена на три логических сегмента (партиции), что позволяет обрабатывать сообщения параллельно. Это увеличивает производительность, поскольку разные потребители могут читать из разных партиций одновременно.
+
+- Параметр: --replication-factor 2
+	Определяет количество реплик (резервных копий) каждой партиции в кластере. Каждая партиция темы будет иметь одну основную реплику (лидер) и одну резервную реплику. Это гарантирует высокую доступность данных. Если один из брокеров выйдет из строя, данные все еще будут доступны на другой реплике.
+
+- Параметр: --bootstrap-server kafka-0:9092
+	Указывает адрес сервера Kafka, к которому будет осуществляться подключение для создания темы, т.е. команда будет выполнять запросы к брокеру kafka-0, работающему на порту 9092. Это также позволяет автоматически обнаружить других брокеров в кластере, если они уже настроены для работы с этой темой.
+	
+Так же тема может быть создана вручную в контейнере.
+
+Определяем <KAFKA_CONTAINER_NAME>:
+
+```docker ps -a```
+
+И создаём тему внутри Kafka контейнера:
+
+```docker exec -it <KAFKA_CONTAINER_NAME> bash -c "/opt/bitnami/kafka/bin/kafka-topics.sh --delete --topic my-topic --bootstrap-server localhost:9092"```
+
+  •  --create: Указывает на создание нового topic.
+  •  --bootstrap-server localhost:9092: Адрес и порт Kafka Broker.
+  •  --replication-factor 2: Каждое сообщение будет скопировано на 2 разных broker-а для отказоустойчивости.
+  •  --partitions 3: topic будет разделен на 3 партиции для параллельной обработки.
+  •  --topic my-topic: Имя topic.
+
+Команда дял вывода описания созданной темы:
+
+```docker exec -it <KAFKA_CONTAINER_NAME> bash /opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic my-topic --bootstrap-server localhost:9092```
+
+Вывод:
+```
+Topic: my-topic TopicId: g6IC-KW5QSqD6-Y2iUS4Qw PartitionCount: 3       ReplicationFactor: 2    Configs:
+        Topic: my-topic Partition: 0    Leader: 2       Replicas: 2,0   Isr: 2,0
+        Topic: my-topic Partition: 1    Leader: 1       Replicas: 0,1   Isr: 1,0
+        Topic: my-topic Partition: 2    Leader: 2       Replicas: 1,2   Isr: 2,1
+```

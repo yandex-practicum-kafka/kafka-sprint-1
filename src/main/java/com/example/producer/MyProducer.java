@@ -10,24 +10,31 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
-@Service
-@RequiredArgsConstructor
+@Service // Аннотация, указывающая, что этот класс является сервисом Spring и будет
+// управляться контейнером Spring
+@RequiredArgsConstructor // Аннотация Lombok, автоматически генерирующая конструктор для всех final полей
 public class MyProducer {
+    private static final Logger logger = LoggerFactory.getLogger(MyProducer.class); // Создание логгера для класса
 
-    private static final Logger logger = LoggerFactory.getLogger(MyProducer.class);
+	private final KafkaTemplate < String, MyMessage > kafkaTemplate; // KafkaTemplate для отправки сообщений. Использует
+    // обобщения: ключ - String, значение - MyMessage.
 
-    private final KafkaTemplate<String, MyMessage> kafkaTemplate;
+	@Value("${kafka.topic}") // Получение имени темы Kafka из конфигурационного файла
+    private String topic; // Переменная для хранения имени темы
 
-    @Value("${kafka.topic}")
-    private String topic;
-
+	// Метод для отправки сообщения в Kafka
     public void sendMessage(MyMessage message) {
-        logger.info("Sending message: {}", message);
-        CompletableFuture<SendResult<String, MyMessage>> future = kafkaTemplate.send(topic, message);
-        future.thenAccept(success -> logger.info("Message sent successfully to topic: {}", topic))
-              .exceptionally(ex -> {
-                  logger.error("Failed to send message to topic: {}", topic, ex);
-                  return null;
-              });
+        logger.info("Sending message: {}", message); // Логируем отправляемое сообщение
+    
+		// Отправляем сообщение и получаем CompletableFuture для обработки результата
+        // отправки
+        CompletableFuture < SendResult < String, MyMessage >> future = kafkaTemplate.send(topic, message);
+ 
+		// Обрабатываем успешную отправку
+        future.thenAccept(success -> logger.info("Message sent successfully to topic: {}", topic)).exceptionally(ex -> {
+            // Обрабатываем исключение в случае неудачной отправки
+            logger.error("Failed to send message to topic: {}", topic, ex);
+            return null; // Завершаем обработку исключения
+        });
     }
 }
