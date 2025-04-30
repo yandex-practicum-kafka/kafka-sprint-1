@@ -72,7 +72,7 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-0:9092,EXTERNAL://192.168.182.42:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-0:9092,EXTERNAL://0.0.0.0:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT   
     volumes:
       - kafka_0_data:/bitnami/kafka
@@ -92,7 +92,7 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9095
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9092,EXTERNAL://192.168.182.42:9095
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9092,EXTERNAL://0.0.0.0:9095
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT   
     volumes:
       - kafka_1_data:/bitnami/kafka
@@ -112,7 +112,7 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9096
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9092,EXTERNAL://192.168.182.42:9096
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9092,EXTERNAL://0.0.0.0:9096
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
     volumes:
       - kafka_2_data:/bitnami/kafka   
@@ -156,24 +156,24 @@ volumes:
   - kafka-1: 9095  
   - kafka-2: 9096  
 - Переменные окружения:   
-  - KAFKA_ENABLE_KRAFT: Включает режим KRaft (Kafka Raft).  
-  - KAFKA_CFG_PROCESS_ROLES: Указывает, что брокер будет работать как брокер и контроллер.  
-  - Кластерный контроллер: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS указывает всех членов кворума для контроллера.  
-  - Слушатели: Настройки KAFKA_CFG_LISTENERS и KAFKA_CFG_ADVERTISED_LISTENERS определяют, как брокеры принимают соединения и как они представляются другим участникам сети.  
-  - Объём данных: Каждому брокеру предоставляется собственный том для хранения данных (kafka_0_data, kafka_1_data, kafka_2_data).  
-- Сеть: Все брокеры подключены к сети kafka-net, что позволяет им взаимодействовать друг с другом.  
+  - ```KAFKA_ENABLE_KRAFT```: Включает режим KRaft (Kafka Raft).  
+  - ```KAFKA_CFG_PROCESS_ROLES```: Указывает, что брокер будет работать как брокер и контроллер.  
+  - Кластерный контроллер: ```KAFKA_CFG_CONTROLLER_QUORUM_VOTERS``` указывает всех членов кворума для контроллера.  
+  - Слушатели: Настройки ```KAFKA_CFG_LISTENERS``` и ```KAFKA_CFG_ADVERTISED_LISTENERS``` определяют, как брокеры принимают соединения и как они представляются другим участникам сети.  
+  - Объём данных: Каждому брокеру предоставляется собственный том для хранения данных (```kafka_0_data```, ```kafka_1_data```, ```kafka_2_data```).  
+- Сеть: Все брокеры подключены к сети ```kafka-net```, что позволяет им взаимодействовать друг с другом.  
 
 ### Сервис создания тем (topic-creator)
 - Образ: Использует тот же образ Kafka, что и брокеры.  
 - Зависимости: Cервис зависит от всех брокеров Kafka. Это гарантирует, что все они будут запущены перед выполнением скрипта создания тем.  
-- Скрипт: Скрипт create-topic.sh, который создает темы, монтируется как том, чтобы быть доступным внутри контейнера.  
-- Entrypoint: При запуске контейнера выполняется скрипт /create-topic.sh, т.е. он будет создавать необходимые темы, при необходимости, в случае их отсутствия, сразу после инициирования.  
+- Скрипт: Скрипт [./scripts/create-topic.sh](./scripts/create-topic.sh), который создает темы, монтируется как том, чтобы быть доступным внутри контейнера.  
+- Entrypoint: При запуске контейнера выполняется скрипт [./scripts/create-topic.sh](./scripts/create-topic.sh), т.е. он будет создавать необходимые темы, при необходимости, в случае их отсутствия, сразу после инициирования.  
 
 ### Сеть
 - Кастомная сеть: Объявлена сеть kafka-net с драйвером bridge, что позволяет контейнерам общаться между собой.  
 
 ### Volumes
-- Для каждого брокера создается отдельный volume (kafka_0_data, kafka_1_data, kafka_2_data), что гарантирует, что данные будут сохраняться и после завершения работы контейнеров.  
+- Для каждого брокера создается отдельный volume (```kafka_0_data```, ```kafka_1_data```, ```kafka_2_data```), что гарантирует, что данные будут сохраняться и после завершения работы контейнеров.  
 
 Конфигурация создает кластер Kafka из трех брокеров с возможностью работы в режиме KRaft. Также предусмотрен сервис, который автоматически создает необходимые темы при старте кластера.  
 
@@ -207,18 +207,18 @@ fi
 
 При создании темы используются следующие параметры:  
 
-- Параметр: --partitions 3  
+- Параметр: ```--partitions 3```  
 	Тема будет разделена на три логических сегмента (партиции), что позволяет обрабатывать сообщения параллельно. Это увеличивает производительность, поскольку разные потребители могут читать из разных партиций одновременно.  
 
-- Параметр: --replication-factor 2  
+- Параметр: ```--replication-factor 2```  
 	Определяет количество реплик (резервных копий) каждой партиции в кластере. Каждая партиция темы будет иметь одну основную реплику (лидер) и одну резервную реплику. Это гарантирует высокую доступность данных. Если один из брокеров выйдет из строя, данные все еще будут доступны на другой реплике.  
 
-- Параметр: --bootstrap-server kafka-0:9092  
+- Параметр: ```--bootstrap-server kafka-0:9092```  
 	Указывает адрес сервера Kafka, к которому будет осуществляться подключение для создания темы, т.е. команда будет выполнять запросы к брокеру kafka-0, работающему на порту 9092. Это также позволяет автоматически обнаружить других брокеров в кластере, если они уже настроены для работы с этой темой.  
 	
 Так же тема может быть создана вручную в контейнере.  
 
-Определяем <KAFKA_CONTAINER_NAME>:
+Определяем ```<KAFKA_CONTAINER_NAME>```:
 
 ```docker ps -a```
 
@@ -310,7 +310,7 @@ fi
 
 ### Пояснения:  
 
-  •  Параметр ```KAFKA_ADVERTISED_HOST_NAME``` (см. ранее) будет доступен для контейнеров producer и consumer.  
+  •  Параметр ```KAFKA_ADVERTISED_HOST_NAME``` (см. ранее) будет доступен для контейнеров ```producer``` и ```consumer```.  
 
   •  ```producer```, ```single-consumer-1```, ```single-consumer-2```, ```batch-consumer-1```, ```batch-consumer-2```, cервисы, запускающие Spring Boot приложение с разными профилями.  
   
