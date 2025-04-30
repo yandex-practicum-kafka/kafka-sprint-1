@@ -308,11 +308,13 @@ fi
       - kafka-net
 ```
 
-Пояснения:  
+### Пояснения:  
 
   •  Параметр ```KAFKA_ADVERTISED_HOST_NAME``` (см. ранее) будет доступен для контейнеров producer и consumer.  
 
-  •  ```producer```, ```single-consumer-1```, ```single-consumer-2```, ```batch-consumer-1```, ```batch-consumer-2```: Сервисы, запускающие Spring Boot приложение с разными профилями. depends_on гарантирует, что Kafka будет запущен перед запуском приложения.  
+  •  ```producer```, ```single-consumer-1```, ```single-consumer-2```, ```batch-consumer-1```, ```batch-consumer-2```, cервисы, запускающие Spring Boot приложение с разными профилями.  
+  
+  •  ```depends_on гарантирует, что Kafka будет запущен перед запуском приложения.  
 
   •  ```build: .```: Указывает, что [Dockerfile](Dockerfile) находится в текущей директории. см. [Dockerfile](Dockerfile) для сборки и старта приложения в корне проекта.  
 
@@ -361,6 +363,8 @@ spring:
     group:
       batch: batch-consumer-group-2
 ```
+
+### Мониторинг сервисов Kafka
 
 Мониторинг сервисов Kafka настраивается (см. [docker-compose.yml](docker-compose.yml)):
 
@@ -424,12 +428,14 @@ spring:
   └── topic.txt
   
 ```
+### Последовательность шагов создания приложения:
 
 •  Создаём проект Spring Boot: Используем [Spring Initializr](https://start.spring.io) или IDE для создания нового проекта Spring Boot.  
 
 •  Добавляем следующие зависимости в файл сборки ```build.gradle``` (Gradle):  
 
-```    dependencies {
+```
+dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.kafka:spring-kafka'
         compileOnly 'org.projectlombok:lombok'
@@ -449,10 +455,14 @@ kafka:
     batch: batch-consumer-group
 ```
 	
-  •  kafka.bootstrap-servers: Адрес Kafka Broker.  
-  •  kafka.topic: Имя topic, в который будут отправляться сообщения.  
-  •  kafka.group.single: Group ID для SingleMessageConsumer.  
-  •  kafka.group.batch: Group ID для BatchMessageConsumer.  
+Описание параметров конфигурации:
+
+```
+kafka.bootstrap-servers: Адрес Kafka Broker.  
+kafka.topic: Имя topic, в который будут отправляться сообщения.  
+kafka.group.single: Group ID для SingleMessageConsumer.  
+kafka.group.batch: Group ID для BatchMessageConsumer.  
+```  
 
 И соответствующие файлы для конфигураций приложения ([application-batch-consumer-1.yml](./src/main/resources/application-batch-consumer-1.yml), [application-batch-consumer-2.yml](./src/main/resources/application-batch-consumer-2.yml), [application-single-consumer-1.yml](./src/main/resources/application-single-consumer-1.yml), [application-single-consumer-2.yml](./src/main/resources/application-single-consumer-2.yml))  
 
