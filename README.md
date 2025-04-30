@@ -235,6 +235,17 @@ fi
   •  ```--replication-factor 2```: Каждое сообщение будет скопировано на 2 разных broker-а для отказоустойчивости.  
   •  ```--partitions 3```: topic будет разделен на 3 партиции для параллельной обработки.  
   •  ```--topic my-topic```: Имя topic.  
+  
+Вывод описания темы:  
+
+```docker exec -it <KAFKA_CONTAINER_NAME> bash /opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic my-topic --bootstrap-server localhost:9092```   
+
+```
+Topic: my-topic TopicId: g6IC-KW5QSqD6-Y2iUS4Qw PartitionCount: 3       ReplicationFactor: 2    Configs:
+        Topic: my-topic Partition: 0    Leader: 2       Replicas: 2,0   Isr: 2,0
+        Topic: my-topic Partition: 1    Leader: 1       Replicas: 0,1   Isr: 1,0
+        Topic: my-topic Partition: 2    Leader: 2       Replicas: 1,2   Isr: 2,1
+```
 
 ## Описание сервисов приложения
 

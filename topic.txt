@@ -62,7 +62,7 @@ fi
   •  --partitions 3: topic будет разделен на 3 партиции для параллельной обработки.
   •  --topic my-topic: Имя topic.
 
-Команда дял вывода описания созданной темы:
+Команда для вывода описания созданной темы:
 
 ```docker exec -it <KAFKA_CONTAINER_NAME> bash /opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic my-topic --bootstrap-server localhost:9092```
 
